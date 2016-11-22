@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias type="net.jgn.textshare.server.user.User" alias="User"/>
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
+                <property name="url" value="jdbc:derby:db/dbUsers;create=true;user=me;password=me" />
+                <property name="username" value="me" />
+                <property name="password" value="me" />
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper class="net.jgn.textshare.server.repo.UserRepository"/>
+    </mappers>
+
+</configuration>
