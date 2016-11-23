@@ -9,7 +9,6 @@ import io.netty.handler.codec.http.cookie.DefaultCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.Set;
@@ -18,10 +17,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author jose
  */
-@Component
 public class SessionManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SessionManager.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(SessionManager.class);
 
     private static final String SESSIONID_COOKIE = "_SSID_";
 
@@ -61,8 +59,8 @@ public class SessionManager {
 
     /**
      * Creates a new session and sets a cookie with its id in the response
-     * @param response
-     * @return
+     * @param response http response
+     * @return the session created
      */
     public Session createNewSession(FullHttpResponse response) {
         Session session = new Session();

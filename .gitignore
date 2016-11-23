@@ -16,4 +16,4 @@ textshare-*/target/
 
 # private files (certs, etc)
 local/
-db/
+derbyDb/

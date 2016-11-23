@@ -9,33 +9,40 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedResource;
 
 /**
- * Created by jose on 5/11/16.
+ * Server implementation
+ * @author jose
  */
-@Component
+@ManagedResource(objectName = "net.jgn.textshare:name=textshare-server")
 public class TextShareServerImpl implements TextShareServer {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    @Qualifier("bossGroup")
     private NioEventLoopGroup bossGroup;
-
-    @Autowired
-    @Qualifier("workerGroup")
     private NioEventLoopGroup workerGroup;
 
-    @Autowired
     private TextShareServerInitializer textShareServerInitializer;
 
     private Channel channel;
+    private ServerParams serverParams;
+
+    /**
+     * Create a new server
+     * @param serverParams config parameters of the server
+     */
+    public TextShareServerImpl(ServerParams serverParams, TextShareServerInitializer textShareServerInitializer) {
+        this.serverParams = serverParams;
+        this.textShareServerInitializer = textShareServerInitializer;
+    }
 
     @Override
-    public Channel start(String bindingAddress, int port) {
+    @ManagedOperation
+    public Channel start() {
+        bossGroup = new NioEventLoopGroup(1);
+        workerGroup = new NioEventLoopGroup(serverParams.getWorkerGroupThreadCount());
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
@@ -44,8 +51,8 @@ public class TextShareServerImpl implements TextShareServer {
 
         try {
             // Start the server.
-            channel = b.bind(bindingAddress, port).sync().channel();
-            logger.info("Text Server started on {}:{}", bindingAddress, port);
+            channel = b.bind(serverParams.getBindingHost(), serverParams.getBindingPort()).sync().channel();
+            logger.info("Text Server started on {}:{}", serverParams.getBindingHost(), serverParams.getBindingPort());
 
             // Wait until the server socket is closed.
             channel.closeFuture().sync();
@@ -55,6 +62,7 @@ public class TextShareServerImpl implements TextShareServer {
         return channel;
     }
 
+    @ManagedOperation()
     @Override
     public void stop() {
         if (this.channel != null) {

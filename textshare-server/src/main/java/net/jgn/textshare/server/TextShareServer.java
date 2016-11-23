@@ -9,10 +9,12 @@ public interface TextShareServer {
 
     /**
      * Starts the server
-     * @param bindingAddress
-     * @param port
      */
-    Channel start(String bindingAddress, int port);
+    Channel start();
 
+    /**
+     * Stops the server
+     */
     void stop();
+
 }

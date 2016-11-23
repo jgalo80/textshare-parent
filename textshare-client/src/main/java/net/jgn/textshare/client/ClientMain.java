@@ -22,7 +22,7 @@ public class ClientMain {
             String url = args[0];
             URI uri = new URI(url);
             String scheme = uri.getScheme();
-            logger.info("Conecting to {}", url);
+            logger.info("Connecting to {}", url);
 
             HttpAuthStage httpAuthStage = new HttpAuthStage(url);
             httpAuthStage.loop();
