@@ -19,14 +19,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
-import org.springframework.jmx.export.MBeanExporter;
-import org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource;
-import org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler;
-import org.springframework.jmx.export.metadata.JmxAttributeSource;
-import org.springframework.jmx.export.naming.MetadataNamingStrategy;
-import org.springframework.jmx.support.MBeanServerFactoryBean;
 
-import javax.management.MBeanServer;
 import javax.net.ssl.SSLException;
 import java.io.File;
 import java.io.IOException;
@@ -84,8 +77,8 @@ public class ServerConfig {
     public ServerParams serverParams() {
         ServerParams.Builder builder = new ServerParams.Builder()
                 .bindingHost(env.getProperty("server.host"))
-                .bindingPort(env.getProperty("server.port", Integer.class, 0))
-                .workerGroupThreadCount(env.getProperty("server.workerGroupThreadCount", Integer.class, 0))
+                .bindingPort(env.getProperty("server.port", Integer.class, 8080))
+                .workerGroupThreadCount(env.getProperty("server.workerGroupThreadCount", Integer.class, 5))
                 .websocketPath(env.getProperty("server.websocketPath"));
         String sslModeStr = env.getProperty("server.sslMode");
         if (sslModeStr != null) {
@@ -120,7 +113,7 @@ public class ServerConfig {
         return new TextShareServerInitializer(sqlSessionFactory,
                 sslCtxWrapper().getSslContext(),
                 sessionManager,
-                env.getProperty("websocketPath"));
+                env.getProperty("server.websocketPath"));
     }
 
     @Bean
@@ -128,6 +121,7 @@ public class ServerConfig {
         return new SessionManager();
     }
 
+    /*
     @Bean
     public MBeanServer mBeanServer() {
         MBeanServerFactoryBean mBeanServerFactoryBean = new MBeanServerFactoryBean();
@@ -142,5 +136,6 @@ public class ServerConfig {
         mBeanExporter.setAssembler(new MetadataMBeanInfoAssembler(jmxAttributeSource));
         return mBeanExporter;
     }
+    */
 
 }

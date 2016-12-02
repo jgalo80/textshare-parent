@@ -1,0 +1,8 @@
+
+- Reconnect if connection lost (client)
+- Rename UID cookie to AUTH. Add expiration to the token (besides the cookie)
+- Revoke AUTH from the server
+- Add sign up date
+- Add last auth date
+- Add disconnect command
+- Add re-auth command (requires some kind of scheduler)
